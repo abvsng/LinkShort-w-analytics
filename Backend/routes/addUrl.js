@@ -59,7 +59,10 @@ const addUrl = async (req, res) => {
       });
       await newPointer.save({ session });
       await session.commitTransaction();
-      return res.status(201).send("user exists and URL added to DB");
+      return res.status(201).json({
+        message: "user exists and URL added to DB",
+        tinyUrl: data.urls[0].tinyUrl,
+      });
     }
     //if userId not in db create new user
     const newUser = new User(data);
@@ -71,7 +74,10 @@ const addUrl = async (req, res) => {
     });
     await newPointer.save({ session });
     await session.commitTransaction();
-    return res.status(201).send("new user andURL added to DB");
+    return res.status(201).json({
+      message: "user created and URL added to DB",
+      tinyUrl: data.urls[0].tinyUrl,
+    });
   } catch (err) {
     await session.abortTransaction();
     res
