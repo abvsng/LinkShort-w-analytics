@@ -5,6 +5,7 @@ const cors = require("cors");
 const { dbConnect } = require("./db/dbConnect");
 const { addUrl } = require("./routes/addUrl");
 const { getUrl } = require("./routes/getUrl");
+const { addTempUrl } = require("./routes/addTempUrl");
 require("dotenv").config();
 
 dbConnect();
@@ -15,6 +16,9 @@ app.get("/", (req, res) => res.send("Hello World!"));
 
 // Add url
 app.post("/api/shorten", addUrl);
+
+// Add temp url
+app.post("/api/shorten-temp", addTempUrl);
 
 //get original url
 app.get("/api/:tinyUrl", getUrl);

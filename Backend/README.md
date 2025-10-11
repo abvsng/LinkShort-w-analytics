@@ -1,36 +1,52 @@
 # Node.js URL Shortener
 
-A simple and efficient URL shortener service built with Node.js, Express, and MongoDB. This application provides a RESTful API to create and manage shortened URLs.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
+A simple and efficient URL shortener service built with Node.js, Express, and MongoDB. This application provides a RESTful API to create both permanent and temporary shortened URLs.
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation & Setup](#installation--setup)
+  - [Running the Application](#running-the-application)
+- [API Endpoints](#api-endpoints)
+  - [Create a Permanent Short URL](#create-a-permanent-short-url)
+  - [Create a Temporary Short URL](#create-a-temporary-short-url)
+  - [Redirect to Original URL](#redirect-to-original-url)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
--   **Shorten URLs:** Convert long, cumbersome URLs into short, easy-to-share tiny URLs.
--   **Fast Redirects:** Quickly redirects short URLs to their original destination.
--   **User-specific Links:** Associates shortened URLs with a user ID, allowing for user-based link management.
--   **AI-Powered Categorization (Optional):** Automatically categorizes URLs using a lightweight, built-in AI classifier.
+-   **Permanent URLs:** Convert long URLs into short, easy-to-share tiny URLs that are associated with a user ID.
+-   **Temporary URLs:** Create anonymous, short-lived URLs that automatically expire and are deleted after 2 days.
+-   **Fast Redirects:** Quickly redirects both permanent and temporary short URLs to their original destination.
+-   **User-specific Link Management:** Associates permanent shortened URLs with a user ID.
 
 ## Tech Stack
 
 -   **Backend:** Node.js, Express.js
 -   **Database:** MongoDB with Mongoose
 -   **Dependencies:**
-    -   `cors` for handling Cross-Origin Resource Sharing
-    -   `dotenv` for managing environment variables
-    -   `nanoid` for generating unique, short URL IDs
+    -   `cors`: For handling Cross-Origin Resource Sharing.
+    -   `dotenv`: For managing environment variables.
+    -   `nanoid`: For generating unique, short URL IDs.
 
 ## Getting Started
 
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+Follow these instructions to get a copy of the project up and running on your local machine.
 
 ### Prerequisites
-
-Make sure you have the following installed on your system:
 
 -   [Node.js](https://nodejs.org/) (v14 or later)
 -   [npm](https://www.npmjs.com/)
 -   [MongoDB](https://www.mongodb.com/try/download/community) (or a cloud-hosted MongoDB instance)
 
-### Installation
+### Installation & Setup
 
 1.  **Clone the repository:**
     ```sh
@@ -48,9 +64,10 @@ Make sure you have the following installed on your system:
     ```sh
     cp .env.example .env
     ```
-    Open the `.env` file and add your MongoDB connection string:
+    Open the `.env` file and add your MongoDB connection string.
+
     ```
-    MONGO_URI=your_mongodb_connection_string
+    DB_URI=your_mongodb_connection_string
     ```
 
 ### Running the Application
@@ -65,12 +82,11 @@ The server will start on `http://localhost:3000`.
 
 ## API Endpoints
 
-The following are the available API endpoints for the service.
+### Create a Permanent Short URL
 
-### Shorten a URL
+Creates a new permanent short URL associated with a user.
 
 -   **Endpoint:** `POST /api/shorten`
--   **Description:** Creates a new short URL.
 -   **Request Body:**
     ```json
     {
@@ -81,18 +97,44 @@ The following are the available API endpoints for the service.
 -   **Successful Response (201):**
     ```json
     {
-      "message": "URL added to DB",
+      "message": "user created and URL added to DB",
+      "tinyUrl": "generated-tiny-url"
+    }
+    ```
+
+### Create a Temporary Short URL
+
+Creates a new temporary short URL that expires after 2 days.
+
+-   **Endpoint:** `POST /api/shorten-temp`
+-   **Request Body:**
+    ```json
+    {
+      "url": "https://your-long-url.com/with/a/very/long/path"
+    }
+    ```
+-   **Successful Response (201):**
+    ```json
+    {
+      "message": "Temporary URL added to DB, will expire in 2 days.",
       "tinyUrl": "generated-tiny-url"
     }
     ```
 
 ### Redirect to Original URL
 
+Redirects to the original long URL corresponding to the provided `tinyUrl`. This works for both permanent and temporary URLs.
+
 -   **Endpoint:** `GET /api/:tinyUrl`
--   **Description:** Redirects to the original long URL corresponding to the provided `tinyUrl`.
 -   **URL Parameter:**
     -   `tinyUrl` (string, required): The short ID of the URL.
 -   **Action:** 302 Redirect to the original URL.
+-   **Error Response (404):**
+    ```json
+    {
+      "message": "URL not found"
+    }
+    ```
 
 ## Project Structure
 
@@ -100,10 +142,12 @@ The following are the available API endpoints for the service.
 .
 ├── db/
 │   ├── dbConnect.js      # Database connection logic
+│   ├── tempUrlSchema.js  # Mongoose schema for temporary URLs with TTL
 │   ├── urlSchema.js      # Mongoose schema for URL pointers
 │   └── userSchema.js     # Mongoose schema for users and their URLs
 ├── routes/
-│   ├── addUrl.js         # Route handler for creating short URLs
+│   ├── addTempUrl.js     # Route handler for creating temporary URLs
+│   ├── addUrl.js         # Route handler for creating permanent URLs
 │   └── getUrl.js         # Route handler for redirecting short URLs
 ├── utils/
 │   └── nanoId.js         # Utility for generating short IDs
@@ -116,3 +160,10 @@ The following are the available API endpoints for the service.
 └── README.md
 ```
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue.
+
+## License
+
+This project is licensed under the MIT License.
