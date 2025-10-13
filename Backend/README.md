@@ -50,8 +50,8 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/your-username/your-repo-name.git
-    cd your-repo-name
+    git clone https://github.com/abvsng/LinkShort-w-analytics.git
+    cd LinkShort-w-analytics/Backend
     ```
 
 2.  **Install dependencies:**
@@ -60,7 +60,7 @@ Follow these instructions to get a copy of the project up and running on your lo
     ```
 
 3.  **Configure environment variables:**
-    Create a `.env` file in the root of the project by copying the example file:
+    Create a `.env` file in the `Backend` directory by copying the example file:
     ```sh
     cp .env.example .env
     ```
@@ -72,7 +72,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Running the Application
 
-To start the server, run the following command:
+To start the server, run the following command from the `Backend` directory:
 
 ```sh
 npm start
@@ -97,8 +97,16 @@ Creates a new permanent short URL associated with a user.
 -   **Successful Response (201):**
     ```json
     {
+      "success": true,
       "message": "user created and URL added to DB",
       "tinyUrl": "generated-tiny-url"
+    }
+    ```
+-   **Error Response (400):**
+    ```json
+    {
+        "success": false,
+        "message": "Url is required"
     }
     ```
 
@@ -116,8 +124,16 @@ Creates a new temporary short URL that expires after 2 days.
 -   **Successful Response (201):**
     ```json
     {
+      "success": true,
       "message": "Temporary URL added to DB, will expire in 2 days.",
       "tinyUrl": "generated-tiny-url"
+    }
+    ```
+-   **Error Response (400):**
+    ```json
+    {
+        "success": false,
+        "message": "Url is required"
     }
     ```
 
@@ -132,6 +148,7 @@ Redirects to the original long URL corresponding to the provided `tinyUrl`. This
 -   **Error Response (404):**
     ```json
     {
+      "success": false,
       "message": "URL not found"
     }
     ```

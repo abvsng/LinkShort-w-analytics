@@ -21,7 +21,9 @@ const getUrl = async (req, res) => {
 
     return res.redirect(urlMapping.longUrl);
   } catch (error) {
-    res.status(500).json({ message: error.message, name: error.name });
+    res
+      .status(500)
+      .json({ success: false, message: error.message, name: error.name });
   }
 };
 module.exports = { getUrl };

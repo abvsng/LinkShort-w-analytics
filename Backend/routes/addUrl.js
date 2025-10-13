@@ -2,29 +2,28 @@ const mongoose = require("mongoose");
 const { User } = require("../db/userSchema");
 const { nanoId } = require("../utils/nanoId");
 const { Pointer } = require("../db/urlSchema");
-const inputValidation = (req, res) => {
+
+const inputValidation = (req) => {
   const { url, userId } = req.body;
   if (!url) {
-    res.status(400).send("URL is required");
-    return false;
+    return { isValid: false, message: "Url is required" };
   }
 
   if (!userId) {
-    res.status(400).send("UserId is required");
-    return false;
+    return { isValid: false, message: "UserId is required" };
   }
-  return true;
+  return { isValid: true };
 };
+
 const addUrl = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    if (!inputValidation(req, res)) {
-      await session.abortTransaction();
-      await session.endSession();
-      return;
+    const validation = inputValidation(req);
+    if (!validation.isValid) {
+      return res.status(400).json({ success: false, message: validation.message });
     }
-    // TODO: Add url to DB
+
     const { userId, url } = req.body;
     const data = {
       userId: userId,
@@ -35,17 +34,17 @@ const addUrl = async (req, res) => {
         },
       ],
     };
-    //chk userId and push to DB
+
     const userExists = await User.findOne({ userId }).session(session);
     if (userExists) {
-      //chking for already existing url
       const alreadyExists = userExists.urls.some(
         (item) => item.longUrl === url
       );
       if (alreadyExists) {
         await session.abortTransaction();
-        await session.endSession();
-        return res.status(400).send("URL already exists");
+        return res
+          .status(400)
+          .json({ success: false, message: "URL already exists" });
       }
       await User.updateOne(
         { userId },
@@ -60,11 +59,12 @@ const addUrl = async (req, res) => {
       await newPointer.save({ session });
       await session.commitTransaction();
       return res.status(201).json({
+        success: true,
         message: "user exists and URL added to DB",
         tinyUrl: data.urls[0].tinyUrl,
       });
     }
-    //if userId not in db create new user
+
     const newUser = new User(data);
     await newUser.save({ session });
     const newPointer = new Pointer({
@@ -75,6 +75,7 @@ const addUrl = async (req, res) => {
     await newPointer.save({ session });
     await session.commitTransaction();
     return res.status(201).json({
+      success: true,
       message: "user created and URL added to DB",
       tinyUrl: data.urls[0].tinyUrl,
     });
@@ -82,9 +83,15 @@ const addUrl = async (req, res) => {
     await session.abortTransaction();
     res
       .status(500)
-      .json({ message: err.message, name: err.name, stack: err.stack });
+      .json({
+        success: false,
+        message: err.message,
+        name: err.name,
+        stack: err.stack,
+      });
   } finally {
     await session.endSession();
   }
 };
+
 module.exports = { addUrl };
