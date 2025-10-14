@@ -55,8 +55,7 @@ export default function HomePage() {
           whileHover={{ scale: 1.1 }}
           className=" bg-red-800 px-2 py-1 rounded-lg text-slate-200 mt-10 text-xs shadow-[0_0_30px] shadow-red-800  text-justify "
         >
-          URLs generated here are not permanent, will expire after 48
-          hours.
+          URLs generated here will expire after 48 hours, Login for more.
         </motion.div>
       </div>
     </>
