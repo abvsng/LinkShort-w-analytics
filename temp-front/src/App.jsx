@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./Pages/HomePage.jsx";
 import UserPage from "./Pages/UserPage.jsx";
 import AppLayout from "./Pages/AppLayout.jsx";
+import ErrorPage from "./Pages/ErrorPage.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               }
             />
           </Route>
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </>

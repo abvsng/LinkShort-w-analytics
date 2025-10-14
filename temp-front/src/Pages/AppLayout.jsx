@@ -27,7 +27,7 @@ export default function AppLayout() {
               <NavLink
                 to="/user"
                 className={({ isActive }) =>
-                  `transition-colors duration-300 hover:text-cyan-500 ${
+                  `transition-colors duraion-300 hover:text-cyan-500 ${
                     isActive ? "text-cyan-500" : ""
                   }`
                 }
