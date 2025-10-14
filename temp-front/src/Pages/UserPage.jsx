@@ -1,13 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Copy } from "lucide-react";
+import { Copy, Trash } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { motion } from "motion/react";
 export default function UserPage() {
   return (
-    <>
-      <InputSection />
-    </>
+    <div className=" flex flex-col gap-10">
+      <section className=" min-h-[90vh]">
+        <InputSection />
+      </section>
+
+      <section className=" min-h-[90vh]">
+        <MyLinks />
+      </section>
+    </div>
   );
 }
 function InputSection() {
@@ -34,7 +40,7 @@ function InputSection() {
   };
   return (
     <>
-      <div className=" flex flex-col items-center justify-center fixed transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 ">
+      <div className=" flex flex-col items-center justify-center absolute transform top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 ">
         <div>
           <input
             ref={longRef}
@@ -67,6 +73,47 @@ function InputSection() {
         >
           URLs generated here are permanent.
         </motion.div>
+      </div>
+    </>
+  );
+}
+function MyLinks() {
+  const { user } = useAuth0();
+  const [links, setLinks] = React.useState([]);
+  React.useEffect(() => {
+    async function getLinks() {
+      const res = await fetch("http://localhost:3000/api/userData", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.sub.split("|")[1],
+        }),
+      });
+      const data = await res.json();
+      setLinks(data);
+    }
+    getLinks();
+  }, [user.sub]);
+  return (
+    <>
+      {links.map((link) => (
+        <LinkBox key={link.id} link={link} />
+      ))}
+    </>
+  );
+}
+function LinkBox({ link }) {
+  return (
+    <>
+      <div className=" bg-slate-500 w-3/5 mx-auto rounded-lg px-4 my-2 relative">
+        <button className=" absolute right-1 top-1">
+          {" "}
+          <Trash size={20} strokeWidth={2} />
+        </button>
+        <div className="py-1">longUrl:{link.longUrl}</div>
+        <div className="py-1">shortUrl:{link.tinyUrl}</div>
       </div>
     </>
   );
