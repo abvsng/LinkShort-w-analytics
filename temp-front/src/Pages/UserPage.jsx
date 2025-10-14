@@ -1,8 +1,16 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { Copy } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { motion } from "motion/react";
 export default function UserPage() {
+  return (
+    <>
+      <InputSection />
+    </>
+  );
+}
+function InputSection() {
   const { user } = useAuth0();
   const tinyRef = React.useRef(null);
   const longRef = React.useRef(null);
