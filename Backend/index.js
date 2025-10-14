@@ -6,6 +6,7 @@ const { dbConnect } = require("./db/dbConnect");
 const { addUrl } = require("./routes/addUrl");
 const { getUrl } = require("./routes/getUrl");
 const { addTempUrl } = require("./routes/addTempUrl");
+const { getUserData } = require("./routes/getUserData");
 require("dotenv").config();
 
 dbConnect();
@@ -16,6 +17,9 @@ app.get("/", (req, res) => res.send("Hello World!"));
 
 // Add url
 app.post("/api/shorten", addUrl);
+
+//get userData
+app.post("/api/userData", getUserData);
 
 // Add temp url
 app.post("/api/shorten-temp", addTempUrl);

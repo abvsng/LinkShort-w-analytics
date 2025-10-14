@@ -16,6 +16,7 @@ A simple and efficient URL shortener service built with Node.js, Express, and Mo
   - [Create a Permanent Short URL](#create-a-permanent-short-url)
   - [Create a Temporary Short URL](#create-a-temporary-short-url)
   - [Redirect to Original URL](#redirect-to-original-url)
+  - [Get All URLs for a User](#get-all-urls-for-a-user)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -153,6 +154,38 @@ Redirects to the original long URL corresponding to the provided `tinyUrl`. This
     }
     ```
 
+### Get All URLs for a User
+
+Retrieves a list of all permanent URLs associated with a specific user.
+
+-   **Endpoint:** `POST /api/userData`
+-   **Request Body:**
+    ```json
+    {
+      "userId": "some-user-id"
+    }
+    ```
+-   **Successful Response (200):**
+    ```json
+    [
+        {
+            "tinyUrl": "generated-tiny-url-1",
+            "longUrl": "https://your-long-url-1.com"
+        },
+        {
+            "tinyUrl": "generated-tiny-url-2",
+            "longUrl": "https://your-long-url-2.com"
+        }
+    ]
+    ```
+-   **Error Response (404):**
+    ```json
+    {
+      "success": false,
+      "message": "User not found"
+    }
+    ```
+
 ## Project Structure
 
 ```
@@ -165,7 +198,8 @@ Redirects to the original long URL corresponding to the provided `tinyUrl`. This
 ├── routes/
 │   ├── addTempUrl.js     # Route handler for creating temporary URLs
 │   ├── addUrl.js         # Route handler for creating permanent URLs
-│   └── getUrl.js         # Route handler for redirecting short URLs
+│   ├── getUrl.js         # Route handler for redirecting short URLs
+│   └── getUserData.js    # Route handler for fetching user data
 ├── utils/
 │   └── nanoId.js         # Utility for generating short IDs
 ├── .env                  # Environment variables (not committed)
