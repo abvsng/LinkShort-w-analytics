@@ -1,6 +1,6 @@
 # Link Shortener Frontend
 
-This is the frontend for a link shortener application with user authentication and analytics. It allows users to shorten long URLs and track their usage.
+This is the frontend for a link shortener application with user authentication. It allows users to shorten long URLs and track their usage.
 
 ## Features
 
@@ -8,6 +8,18 @@ This is the frontend for a link shortener application with user authentication a
 *   **Permanent Link Shortening:** Create an account to generate permanent short links.
 *   **User Authentication:** Secure user authentication using Auth0.
 *   **User Dashboard:** View and manage your shortened links.
+*   **Protected Routes:** Ensures that only authenticated users can access the user dashboard.
+*   **404 Page:** A custom 404 page with a Lottie animation.
+
+## Tech Stack
+
+*   **Framework:** React
+*   **Build Tool:** Vite
+*   **Styling:** Tailwind CSS
+*   **State Management:** Redux Toolkit
+*   **Routing:** React Router
+*   **Authentication:** Auth0
+*   **Animations:** Lottie, Framer Motion
 
 ## Getting Started
 
@@ -40,12 +52,39 @@ The frontend will be running at `http://localhost:5173`.
 *   `npm run lint`: Lints the code.
 *   `npm run preview`: Previews the production build.
 
+## Project Structure
+
+```
+temp-front/
+├── src/
+│   ├── Components/
+│   │   └── ProtectedRoute.jsx    # Protects routes from unauthenticated users
+│   ├── Pages/
+│   │   ├── AppLayout.jsx         # Main layout with header and navigation
+│   │   ├── ErrorPage.jsx         # 404 error page
+│   │   ├── HomePage.jsx          # Page for temporary link shortening
+│   │   └── UserPage.jsx          # Page for permanent link shortening
+│   ├── Store/
+│   │   ├── store.jsx             # Redux store configuration
+│   │   └── Slices/
+│   │       └── counterSlice.jsx  # Example Redux slice
+│   ├── App.jsx                 # Main application component with routing
+│   └── main.jsx                # Entry point of the application
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
+└── vite.config.js
+```
+
 ## Dependencies
 
 *   `@auth0/auth0-react`: ^2.6.0
 *   `@reduxjs/toolkit`: ^2.9.0
 *   `@tailwindcss/vite`: ^4.1.14
+*   `lottie-react`: ^2.4.1
 *   `lucide-react`: ^0.545.0
+*   `motion`: ^12.23.24
 *   `react`: ^19.1.1
 *   `react-dom`: ^19.1.1
 *   `react-redux`: ^9.2.0
