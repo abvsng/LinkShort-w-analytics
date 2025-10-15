@@ -17,6 +17,7 @@ A simple and efficient URL shortener service built with Node.js, Express, and Mo
   - [Create a Temporary Short URL](#create-a-temporary-short-url)
   - [Redirect to Original URL](#redirect-to-original-url)
   - [Get All URLs for a User](#get-all-urls-for-a-user)
+  - [Delete a URL](#delete-a-url)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -35,6 +36,7 @@ A simple and efficient URL shortener service built with Node.js, Express, and Mo
 -   **Dependencies:**
     -   `cors`: For handling Cross-Origin Resource Sharing.
     -   `dotenv`: For managing environment variables.
+    -   `mongoose`: For object data modeling with MongoDB.
     -   `nanoid`: For generating unique, short URL IDs.
 
 ## Getting Started
@@ -82,6 +84,15 @@ npm start
 The server will start on `http://localhost:3000`.
 
 ## API Endpoints
+
+### Health Check
+
+A simple endpoint to verify that the service is running.
+
+-   **Endpoint:** `GET /`
+-   **Successful Response (200):**
+    -   Content-Type: `text/html`
+    -   Body: `Hello World!`
 
 ### Create a Permanent Short URL
 
@@ -186,6 +197,39 @@ Retrieves a list of all permanent URLs associated with a specific user.
     }
     ```
 
+### Delete a URL
+
+Deletes a permanent URL from a user's account and the central pointer collection.
+
+-   **Endpoint:** `DELETE /api/url`
+-   **Request Body:**
+    ```json
+    {
+      "tinyUrl": "the-short-url-to-delete",
+      "userId": "some-user-id"
+    }
+    ```
+-   **Successful Response (200):**
+    ```json
+    {
+      "success": true,
+      "message": "URL deleted successfully."
+    }
+    ```
+-   **Error Responses (400, 404):**
+    ```json
+    {
+      "success": false,
+      "message": "tinyUrl is required"
+    }
+    ```
+    ```json
+    {
+      "success": false,
+      "message": "URL not found or user does not have permission to delete it."
+    }
+    ```
+
 ## Project Structure
 
 ```
@@ -198,6 +242,7 @@ Retrieves a list of all permanent URLs associated with a specific user.
 ├── routes/
 │   ├── addTempUrl.js     # Route handler for creating temporary URLs
 │   ├── addUrl.js         # Route handler for creating permanent URLs
+│   ├── deleteUrl.js      # Route handler for deleting a URL
 │   ├── getUrl.js         # Route handler for redirecting short URLs
 │   └── getUserData.js    # Route handler for fetching user data
 ├── utils/
@@ -205,7 +250,7 @@ Retrieves a list of all permanent URLs associated with a specific user.
 ├── .env                  # Environment variables (not committed)
 ├── .env.example          # Example environment file
 ├── .gitignore
-├── constants.js
+├── constants.js          # Application constants
 ├── index.js              # Main application entry point
 ├── package.json
 └── README.md
